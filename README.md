@@ -1,6 +1,6 @@
 # Bunnymark benchmark for rust-sfml.
 
-Rust and SFML simple performance testing.
+Rust and SFML simple performance testing. Add bunnies with right click.
 
 ## Requirements
 - [SFML 2.5](http://www.sfml-dev.org/download.php)
