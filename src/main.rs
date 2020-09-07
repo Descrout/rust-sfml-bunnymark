@@ -77,8 +77,8 @@ impl Game{
         let mut timer = 0.0;
         let mut frames = 0u32;
         let font = Font::from_file("roboto.ttf").unwrap();
-        let mut text = Text::new(&self.fps_text, &font, 24);
-        text.set_fill_color(Color::WHITE);
+        let mut text = Text::new(&self.fps_text, &font, 30);
+        text.set_fill_color(Color::RED);
 
         //Start main loop
         loop {
