@@ -55,15 +55,13 @@ impl Game {
 
         for bunny in self.bunnies.iter_mut() {
             bunny.update();
+            
+            self.batch
+                .add(bunny.x, bunny.y, bunny.w, bunny.h, bunny.region);
         }
     }
 
     fn draw(&mut self) {
-        for bunny in self.bunnies.iter() {
-            self.batch
-                .add(bunny.x, bunny.y, bunny.w, bunny.h, bunny.region);
-        }
-
         self.window.clear(Color::BLACK);
         self.batch.display(&self.window);
         self.window.display();
