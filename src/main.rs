@@ -21,7 +21,6 @@ struct Game{
     window: RenderWindow,
     batch: SpriteBatch,
     bunnies: Vec<Bunny>,
-    one_click: bool,
     fps_text: String,
 }
 
@@ -37,24 +36,21 @@ impl Game{
             window,
             batch: SpriteBatch::new("lineup.png"),
             bunnies: Vec::new(),
-            one_click: false,
             fps_text: String::new(),
         }
     }
 
     fn add_bunnies(&mut self, count: usize) {
+        let mouse = self.window.mouse_position();
         for _ in 0..count {
-            self.bunnies.push(Bunny::new());
+            self.bunnies.push(Bunny::new(mouse.x as f32, mouse.y as f32));
         }
     }
 
     fn update(&mut self) {
-        if self.window.has_focus() &&  mouse::Button::Left.is_pressed(){
-            if !self.one_click {
-                self.one_click = true;
-                self.add_bunnies(100);
-            }
-        }else {self.one_click = false}
+        if self.window.has_focus() && mouse::Button::Left.is_pressed() {
+            self.add_bunnies(10);
+        }
 
         for bunny in self.bunnies.iter_mut() {
             bunny.update();
