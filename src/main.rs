@@ -9,7 +9,7 @@ use sprite_batch::SpriteBatch;
 use std::time::{Duration, Instant};
 
 use sfml::{
-    graphics::{Color, Font, RenderTarget, RenderWindow, Text},
+    graphics::{Color, RenderTarget, RenderWindow},
     window::{mouse, Event, Style},
 };
 
@@ -21,14 +21,14 @@ struct Game {
     window: RenderWindow,
     batch: SpriteBatch,
     bunnies: Vec<Bunny>,
-    fps_text: String,
+    info_text: String,
 }
 
 impl Game {
     fn new() -> Self {
         let window = RenderWindow::new(
             (WIDTH, HEIGHT),
-            "SFML Bunny Mark Benchmark",
+            "Right click to add more bunnies !",
             Style::CLOSE,
             &Default::default(),
         );
@@ -36,7 +36,7 @@ impl Game {
             window,
             batch: SpriteBatch::new("lineup.png"),
             bunnies: Vec::new(),
-            fps_text: String::new(),
+            info_text: String::new(),
         }
     }
 
@@ -49,7 +49,7 @@ impl Game {
     }
 
     fn update(&mut self) {
-        if self.window.has_focus() && mouse::Button::Left.is_pressed() {
+        if self.window.has_focus() && mouse::Button::Right.is_pressed() {
             self.add_bunnies(10);
         }
 
@@ -58,7 +58,7 @@ impl Game {
         }
     }
 
-    fn draw(&mut self, text: &Text) {
+    fn draw(&mut self) {
         for bunny in self.bunnies.iter() {
             self.batch
                 .add(bunny.x, bunny.y, bunny.w, bunny.h, bunny.region);
@@ -66,7 +66,6 @@ impl Game {
 
         self.window.clear(Color::BLACK);
         self.batch.display(&self.window);
-        self.window.draw(text);
         self.window.display();
     }
 
@@ -77,9 +76,6 @@ impl Game {
         //Debug info vars
         let mut timer = 0.0;
         let mut frames = 0u32;
-        let font = Font::from_file("roboto.ttf").unwrap();
-        let mut text = Text::new(&self.fps_text, &font, 30);
-        text.set_fill_color(Color::RED);
 
         //Start main loop
         loop {
@@ -94,7 +90,7 @@ impl Game {
             accumulator += delta_time;
             while accumulator >= FIXED_TIMESTEP {
                 self.update();
-                self.draw(&text);
+                self.draw();
                 accumulator -= FIXED_TIMESTEP;
             }
 
@@ -102,8 +98,8 @@ impl Game {
             timer += delta_time;
             frames += 1;
             if timer >= 1.0 {
-                self.fps_text = format!("Bunnies : {}, FPS : {}", self.bunnies.len(), frames);
-                text.set_string(&self.fps_text);
+                self.info_text = format!("Bunnies : {}, FPS : {}", self.bunnies.len(), frames);
+                self.window.set_title(&self.info_text);
                 frames = 0;
                 timer = 0.0;
             }
