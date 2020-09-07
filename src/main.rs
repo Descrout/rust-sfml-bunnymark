@@ -49,7 +49,7 @@ impl Game{
     }
 
     fn update(&mut self) {
-        if mouse::Button::Left.is_pressed(){
+        if self.window.has_focus() &&  mouse::Button::Left.is_pressed(){
             if !self.one_click {
                 self.one_click = true;
                 self.add_bunnies(100);
@@ -121,5 +121,6 @@ impl Game{
 
 fn main() {
     let mut game = Game::new();
+    game.add_bunnies(100);
     game.run();
 }
