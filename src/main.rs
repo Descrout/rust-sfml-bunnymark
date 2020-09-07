@@ -1,30 +1,30 @@
-extern crate sfml;
 extern crate rand;
+extern crate sfml;
 
-mod sprite_batch;
 mod bunny;
+mod sprite_batch;
 
-use std::time::{Instant, Duration};
-use sprite_batch::SpriteBatch;
 use bunny::Bunny;
+use sprite_batch::SpriteBatch;
+use std::time::{Duration, Instant};
 
 use sfml::{
-    graphics::{Color, RenderWindow, RenderTarget, Font, Text},
-    window::{Event, mouse, Style},
+    graphics::{Color, Font, RenderTarget, RenderWindow, Text},
+    window::{mouse, Event, Style},
 };
 
 const WIDTH: u32 = 1280;
 const HEIGHT: u32 = 720;
 const FIXED_TIMESTEP: f32 = 0.016;
 
-struct Game{
+struct Game {
     window: RenderWindow,
     batch: SpriteBatch,
     bunnies: Vec<Bunny>,
     fps_text: String,
 }
 
-impl Game{
+impl Game {
     fn new() -> Self {
         let window = RenderWindow::new(
             (WIDTH, HEIGHT),
@@ -32,7 +32,7 @@ impl Game{
             Style::CLOSE,
             &Default::default(),
         );
-        Self{
+        Self {
             window,
             batch: SpriteBatch::new("lineup.png"),
             bunnies: Vec::new(),
@@ -43,7 +43,8 @@ impl Game{
     fn add_bunnies(&mut self, count: usize) {
         let mouse = self.window.mouse_position();
         for _ in 0..count {
-            self.bunnies.push(Bunny::new(mouse.x as f32, mouse.y as f32));
+            self.bunnies
+                .push(Bunny::new(mouse.x as f32, mouse.y as f32));
         }
     }
 
@@ -55,12 +56,12 @@ impl Game{
         for bunny in self.bunnies.iter_mut() {
             bunny.update();
         }
-        
     }
 
     fn draw(&mut self, text: &Text) {
         for bunny in self.bunnies.iter() {
-            self.batch.add(bunny.x, bunny.y, bunny.w, bunny.h, bunny.region);
+            self.batch
+                .add(bunny.x, bunny.y, bunny.w, bunny.h, bunny.region);
         }
 
         self.window.clear(Color::BLACK);
@@ -84,7 +85,9 @@ impl Game{
         loop {
             let start = Instant::now();
             while let Some(event) = self.window.poll_event() {
-                if event == Event::Closed {return}
+                if event == Event::Closed {
+                    return;
+                }
             }
 
             //Fixed timestep.
@@ -94,7 +97,7 @@ impl Game{
                 self.draw(&text);
                 accumulator -= FIXED_TIMESTEP;
             }
-            
+
             //Calculate FPS
             timer += delta_time;
             frames += 1;
@@ -104,13 +107,12 @@ impl Game{
                 frames = 0;
                 timer = 0.0;
             }
-            
+
             //FPS Lock
             let elapsed = start.elapsed().as_millis() as u64;
-            let wait_ms = if elapsed >= 16 {16}else{16-elapsed};
+            let wait_ms = if elapsed >= 16 { 16 } else { 16 - elapsed };
             ::std::thread::sleep(Duration::from_millis(wait_ms));
             delta_time = start.elapsed().as_secs_f32();
-
         }
     }
 }
