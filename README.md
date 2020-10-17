@@ -5,7 +5,7 @@ Rust and SFML simple performance testing. Add more bunnies with right click.
 ## Requirements
 - [SFML 2.5](http://www.sfml-dev.org/download.php)
 - [CSFML 2.5](http://www.sfml-dev.org/download/csfml/)
-
+- Check out rust-sfml [wiki](https://github.com/jeremyletang/rust-sfml/wiki) for installation guidance.
 ## Don't forget to run with --release
 ``cargo run --release``
 
