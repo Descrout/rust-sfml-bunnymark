@@ -10,7 +10,7 @@ Rust and SFML simple performance testing. Add more bunnies with right click.
 ``cargo run --release``
 
 
-## My old laptop runs at 60FPS until 12k bunnies.
+## My old laptop runs at 60FPS until 12k bunnies. (22k on Windows)
 ```
 MACHINE : Type: Laptop, System: Acer, product: Aspire E5-571G
 OS : Kernel: 5.7.17-2-MANJARO x86_64, Desktop: Xfce 4.14.2

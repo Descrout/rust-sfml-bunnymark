@@ -88,7 +88,7 @@ impl Game {
             timer += delta_time;
             frames += 1;
             if timer >= 1.0 {
-                self.info_text = format!("Bunnies : {}, FPS : {}", self.bunnies.len(), frames);
+                self.info_text = format!("Bunnies : {}, FPS : {} - Right click to add more bunnies !", self.bunnies.len(), frames);
                 self.window.set_title(&self.info_text);
                 frames = 0;
                 timer = 0.0;
