@@ -35,15 +35,15 @@ impl Bunny {
             h,
             dx: dx + x_rand,
             dy: -200.0,
-            gravity: rng.gen_range(20.0, 40.0),
+            gravity: rng.gen_range(1400.0, 2100.0),
         }
     }
 
-    pub fn update(&mut self) {
-        self.x += self.dx * crate::FIXED_TIMESTEP;
-        self.y += self.dy * crate::FIXED_TIMESTEP;
+    pub fn update(&mut self, dt: f32) {
+        self.x += self.dx * dt;
+        self.y += self.dy * dt;
 
-        self.dy += self.gravity;
+        self.dy += self.gravity * dt;
 
         self.check_collision();
 

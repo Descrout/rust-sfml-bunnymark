@@ -6,7 +6,7 @@ mod sprite_batch;
 
 use bunny::Bunny;
 use sprite_batch::SpriteBatch;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use sfml::{
     graphics::{Color, RenderTarget, RenderWindow},
@@ -15,7 +15,6 @@ use sfml::{
 
 const WIDTH: u32 = 1280;
 const HEIGHT: u32 = 720;
-const FIXED_TIMESTEP: f32 = 0.016;
 
 struct Game {
     window: RenderWindow,
@@ -35,7 +34,7 @@ impl Game {
         Self {
             window,
             batch: SpriteBatch::new("lineup.png"),
-            bunnies: Vec::new(),
+            bunnies: Vec::with_capacity(100000),
             info_text: String::new(),
         }
     }
@@ -48,13 +47,13 @@ impl Game {
         }
     }
 
-    fn update(&mut self) {
+    fn update(&mut self, dt: f32) {
         if self.window.has_focus() && mouse::Button::Right.is_pressed() {
             self.add_bunnies(10);
         }
 
         for bunny in self.bunnies.iter_mut() {
-            bunny.update();
+            bunny.update(dt);
             
             self.batch
                 .add(bunny.x, bunny.y, bunny.w, bunny.h, bunny.region);
@@ -68,7 +67,6 @@ impl Game {
     }
 
     fn run(&mut self) {
-        let mut accumulator = 0.0;
         let mut delta_time = 0.0;
 
         //Debug info vars
@@ -83,14 +81,8 @@ impl Game {
                     return;
                 }
             }
-
-            //Fixed timestep.
-            accumulator += delta_time;
-            while accumulator >= FIXED_TIMESTEP {
-                self.update();
-                self.draw();
-                accumulator -= FIXED_TIMESTEP;
-            }
+            self.update(delta_time);
+            self.draw();
 
             //Calculate FPS
             timer += delta_time;
@@ -101,11 +93,11 @@ impl Game {
                 frames = 0;
                 timer = 0.0;
             }
-
-            //FPS Lock
-            let elapsed = start.elapsed().as_millis() as u64;
+            
+            //Fps Lock
+            let elapsed = start.elapsed().as_millis() as i32;
             let wait_ms = if elapsed >= 16 { 16 } else { 16 - elapsed };
-            ::std::thread::sleep(Duration::from_millis(wait_ms));
+            sfml::system::sleep(sfml::system::Time::milliseconds(wait_ms));
             delta_time = start.elapsed().as_secs_f32();
         }
     }
